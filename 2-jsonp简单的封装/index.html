@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    </head>
+
+    <body>
+        <button onclick="jsonp('https://api.douban.com/v2/movie/top250')">切换</button>
+        <script>
+
+           
+            async function jsonp(_url) {
+                var functionName = 'jsonp_' + Math.ceil(Math.random() * 100000000);
+
+                // 动态生成script标签
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = _url + '?' + 'callback=' + functionName;
+
+                document.getElementsByTagName('head')[0].appendChild(script);
+
+                window[functionName] = function (data) {
+                    console.log(data);
+                    if (data) {
+
+                         // 移除script标签  
+                        document.getElementsByTagName('head')[0].removeChild(script);
+                        try {
+                            // 删除动态生成的函数
+                            // 注意的是jsonp请求是异步请求，不能直接删除函数，得等到成功返回才能删除
+                            delete window[functionName];
+                        } catch (e) {
+                            window[functionName] = undefined;
+                        }
+                    }
+                }
+            }
+               
+
+     
+
+
+
+
+
+
+        </script>
+    </body>
+
+</html>
